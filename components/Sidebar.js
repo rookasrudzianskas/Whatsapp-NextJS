@@ -1,8 +1,24 @@
 import styled from 'styled-components';
 import {Avatar, Button, IconButton} from "@material-ui/core";
 import {ChatOutlined, MoreVert, SearchOutlined} from "@material-ui/icons";
+import * as EmailValidator from "email-validator";
 
 const Sidebar = () => {
+
+    const createChat = () => {
+            const input = prompt("Enter the chat email address, you wish to chat with");
+
+            if(!input) {
+                return false;
+            }
+
+            if(EmailValidator.validate(input)) {
+                // this is where to add the chat into the chat collection
+
+            }
+
+    }
+
     return (
         <Container>
             <Header>
@@ -23,7 +39,7 @@ const Sidebar = () => {
                 <SearchInput placeholder="Search in chats" />
             </Search>
 
-            <SidebarButton>
+            <SidebarButton onClick={createChat}>
                 Start a new chat
             </SidebarButton>
 
