@@ -45,13 +45,13 @@ const Sidebar = () => {
                 );
     };
 
-    console.log(chatsSnapshot)
+    // console.log(chatsSnapshot)
 
 
     return (
         <Container>
             <Header>
-                <UserAvatar onClick={() => auth.signOut()} />
+                <UserAvatar src={user.photoURL} onClick={() => auth.signOut()} />
 
                 <IconsContainer>
                     <IconButton>
