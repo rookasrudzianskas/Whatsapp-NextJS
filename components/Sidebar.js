@@ -10,42 +10,35 @@ import Chat from "./Chat";
 const Sidebar = () => {
 
     const [user] = useAuthState(auth);
-
-    // goes to the database chats, and checks, if in the users there is already the email we are checking on, to prevent chatting rokas with rokas
     const userChatRef = db
-        .collection('chats')
-        .where('users', 'array-contains', user.email);
+        .collection("chats")
+        .where("users", "array-contains", user.email);
     const [chatsSnapshot] = useCollection(userChatRef);
 
     const createChat = () => {
-            const input = prompt("Enter the chat email address, you wish to chat with");
+        const input = prompt(
+            "Please enter email address for the user you wish to chat with"
+        );
 
-            if(!input) {
-                return false;
-            }
+        if (!input) return null;
 
-            // if that does not already exists
-            if(EmailValidator.validate(input) &&
-                input !== user.email &&
-                !chatAlreadyExists(input)) {
-                // this is where to add the chat into the chat collection
-                db.collection("chats").add({
-                    // the current email, and input what is entered
-                    users: [user.email, input]
-                });
-            }
+        if (
+            EmailValidator.validate(input) &&
+            !chatAlreadyExists(input) &&
+            input !== user.email
+        ) {
+            // We need to add the chat into de DB 'chats collection' if it doesn't already exist and is valid
+            db.collection("chats").add({
+                users: [user.email, input],
+            });
+        }
     };
 
-    const chatAlreadyExists = (recipeientEmail) => {
-        // will convert to true or false
-                // through the chats, and find if there is an email with the same as passed email
-                !!chatsSnapshot?.docs.find(
-                    (chat) =>
-                        chat.data().users.find((user) => user === recipeientEmail)?.length > 0
-                );
-    };
-
-    // console.log(chatsSnapshot)
+    const chatAlreadyExists = (recipientEmail) =>
+        !!chatsSnapshot?.docs.find(
+            (chat) =>
+                chat.data().users.find((user) => user === recipientEmail)?.length > 0
+        );
 
 
     return (
@@ -136,3 +129,42 @@ const UserAvatar = styled(Avatar)`
 const IconsContainer = styled.div`
   
 `
+
+// const [user] = useAuthState(auth);
+//
+// // goes to the database chats, and checks, if in the users there is already the email we are checking on, to prevent chatting rokas with rokas
+// const userChatRef = db
+//     .collection('chats')
+//     .where('users', 'array-contains', user.email);
+// const [chatsSnapshot] = useCollection(userChatRef);
+//
+// const createChat = () => {
+//     const input = prompt("Enter the chat email address, you wish to chat with");
+//
+//     if(!input) {
+//         return false;
+//     }
+//
+//     // if that does not already exists
+//     if(EmailValidator.validate(input) &&
+//         input !== user.email &&
+//         !chatAlreadyExists(input)) {
+//         // this is where to add the chat into the chat collection
+//         db.collection("chats").add({
+//             // the current email, and input what is entered
+//             users: [user.email, input]
+//         });
+//     }
+// };
+//
+// const chatAlreadyExists = (recipeientEmail) => {
+//     // will convert to true or false
+//     // through the chats, and find if there is an email with the same as passed email
+//     !!chatsSnapshot?.docs.find(
+//         (chat) =>
+//             chat.data().users.find((user) => user === recipeientEmail)?.length > 0
+//     );
+// };
+//
+// // console.log(chatsSnapshot)
+
