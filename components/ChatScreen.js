@@ -14,6 +14,8 @@ import Message from '../components/Message';
 import { auth, db } from '../firebase';
 import getRecipientEmail from '../utils/getRecipientEmail';
 
+
+// DONE
 const ChatScreen = ({ chat, messages }) => {
     const [message, setMessage] = useState('');
     const endOfMessagesRef = useRef(null);
