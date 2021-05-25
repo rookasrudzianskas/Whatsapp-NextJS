@@ -11,9 +11,9 @@ const Login = () => {
 
     return (
         <Container>
-            <Head>
+            {/*<Head>*/}
 
-            </Head>
+            {/*</Head>*/}
 
             <LoginContainer>
                 <Logo src="https://i.pinimg.com/originals/f7/5d/94/f75d94874d855a7fcfcc922d89ac5e80.png" />

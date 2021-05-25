@@ -2,8 +2,19 @@ import styled from 'styled-components';
 import {Avatar, Button, IconButton} from "@material-ui/core";
 import {ChatOutlined, MoreVert, SearchOutlined} from "@material-ui/icons";
 import * as EmailValidator from "email-validator";
+import {auth, db} from "../firebase";
+import {useAuthState} from "react-firebase-hooks/auth";
+import {useCollection} from "react-firebase-hooks/firestore";
 
 const Sidebar = () => {
+
+    const [user] = useAuthState(auth);
+
+    // goes to the database chats, and checks, if in the users there is already the email we are checking on, to prevent chatting rokas with rokas
+    const userChatRef = db
+        .collection('chats')
+        .where('users', 'array-contains', user.email);
+    const [chatsSnapshot] = useCollection(userChatRef);
 
     const createChat = () => {
             const input = prompt("Enter the chat email address, you wish to chat with");
@@ -12,17 +23,31 @@ const Sidebar = () => {
                 return false;
             }
 
-            if(EmailValidator.validate(input)) {
+            // if that does not already exists
+            if(EmailValidator.validate(input) &&
+                input !== user.email &&
+                !chatAlreadyExists(input)) {
                 // this is where to add the chat into the chat collection
-
+                db.collection("chats").add({
+                    // the current email, and input what is entered
+                    users: [user.email, input]
+                });
             }
+    };
 
-    }
+    const chatAlreadyExists = (recipeientEmail) => {
+        // will convert to true or false
+                // through the chats, and find if there is an email with the same as passed email
+                !!chatsSnapshot?.docs.find(
+                    (chat) =>
+                        chat.data().users.find((user) => user === recipeientEmail)?.length > 0
+                );
+    };
 
     return (
         <Container>
             <Header>
-                <UserAvatar />
+                <UserAvatar onClick={() => auth.signOut()} />
 
                 <IconsContainer>
                     <IconButton>
